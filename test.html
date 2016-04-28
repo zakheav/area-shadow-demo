@@ -1,0 +1,35 @@
+<html>
+    <body>
+    <canvas id="myCanvas" tabindex="0" style="display: block; border:2px solid #aaa; margin:auto"></canvas>
+    </body>
+</html>
+<script src="polygon.js"></script>
+<script src="shadow.js"></script>
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    canvas.width = 1000;
+    canvas.height = 1000;
+
+    var polyPointArray = [{x:100,y:100},{x:200,y:200},{x:300,y:100},{x:350,y:200},{x:300,y:300}, {x:100,y:300}];
+    var framePointArray = [{x:0,y:0},{x:1000,y:0},{x:1000,y:1000}, {x:0,y:1000}];
+    var p1 = new Polygon( polyPointArray, "rgb(255,0,0)" );
+    var f = new Polygon( framePointArray, "rgb(255,255,255)" );
+    
+
+    canvas.addEventListener('mousedown',function(e){//绑定鼠标点击事件
+        
+        var coordinate = windowToCanvas(canvas, e.clientX, e.clientY);
+        ctx.clearRect(0,0,1000,1000);
+        draw_shadow(ctx, p1, f, {x:coordinate.x, y:coordinate.y});
+        p1.polygonFill(ctx);
+    });
+
+    var windowToCanvas = function(canvas, x, y){//x,y是浏览器空间内的鼠标坐标
+        var bbox = canvas.getBoundingClientRect();//获取canvas元素的边界框
+        return {
+            x: x - bbox.left*(canvas.width/bbox.width),
+            y: y - bbox.top*(canvas.height/bbox.height)
+        };
+    };//鼠标的坐标从浏览器空间转化为canvas空间
+</script>
